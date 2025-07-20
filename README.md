@@ -6,10 +6,22 @@
 
 ## About
 
-This is a fixed and backported version of the **Pawn** addon, designed for [Wrath of the Lich King Classic 3.3.5a](https://worldofwarcraft.com/).  
-The original Pawn is by [VgerAN](https://www.curseforge.com/members/vgeran/projects) ([CurseForge page](https://www.curseforge.com/wow/addons/pawn)).
+This is a fixed and backported version of the **Pawn** addon, designed for [Wrath of the Lich King Classic 3.3.5a](https://worldofwarcraft.com/).
+
+The original Pawn is by [Travis Spomer](https://www.curseforge.com/members/travisspomer/projects)  
+([CurseForge page](https://www.curseforge.com/wow/addons/pawn)).
 
 This repo includes all necessary code tweaks and polyfills to ensure Pawn runs without errors on the 3.3.5a client.
+
+---
+
+## Features
+
+- **Item comparison and upgrade arrows** in tooltips.
+- **Customizable stat weights** ("scales").
+- **Works on Wrath Classic 3.3.5a.**
+- **Percentages work now!** Item tooltips show upgrade/downgrade percentages just like retail.
+- No more retail-only errors or missing functions.
 
 ---
 
@@ -23,20 +35,11 @@ This repo includes all necessary code tweaks and polyfills to ensure Pawn runs w
 
 ---
 
-## Features
-
-- Item comparison and upgrade arrows in tooltips.
-- Customizable stat weights ("scales").
-- Works on Wrath Classic 3.3.5a.
-- No more retail-only errors or missing functions.
-
----
-
 ## Credits
 
-- Original author: [VgerAN](https://www.curseforge.com/members/vgeran/projects)
-- Backport and WotLK fixes: [Your Name Here]
-- Special thanks to the WoW Classic community for testing and feedback.
+- **Original author:** [Travis Spomer](https://www.curseforge.com/members/travisspomer/projects)
+- **Backport and WotLK fixes:** [Your Name Here]
+- **Special thanks** to the WoW Classic community for testing and feedback.
 
 ---
 
