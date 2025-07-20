@@ -360,7 +360,11 @@ function PawnUI_ScalesTab_Refresh()
 	PawnUIFrame_ScaleColorSwatch_Update()
 
 	if PawnUICurrentScale ~= PawnLocal.NoScale then
-		PawnUIFrame_ScaleNameLabel:SetText(PawnGetScaleColor(PawnUICurrentScale) .. PawnGetScaleLocalizedName(PawnUICurrentScale))
+	if PawnUICurrentScale then
+	    PawnUIFrame_ScaleNameLabel:SetText("Current scale: " .. PawnUICurrentScale)
+	else
+	    PawnUIFrame_ScaleNameLabel:SetText("No scale selected.")
+	end
 		if PawnScaleIsReadOnly(PawnUICurrentScale) then
 			PawnUIFrame_ScaleTypeLabel:SetText(PawnUIFrame_ScaleTypeLabel_ReadOnlyScaleText)
 			PawnUIFrame_RenameScaleButton:Disable()
@@ -574,43 +578,101 @@ function PawnUIFrame_CopyScale_OnOK(NewScaleName)
 end
 
 function PawnUIFrame_DeleteScaleButton_OnClick()
-	if IsShiftKeyDown() then
-		-- If the user held down the shift key when clicking the Delete button, just do it immediately.
-		PawnUIFrame_DeleteScaleButton_OnOK(DELETE_ITEM_CONFIRM_STRING)
-	else
-		PawnUIGetString(format(PawnLocal.DeleteScaleConfirmation, PawnUICurrentScale, DELETE_ITEM_CONFIRM_STRING), "", PawnUIFrame_DeleteScaleButton_OnOK)
-	end
+    local ScaleName = PawnUICurrentScale
+    if not ScaleName or ScaleName == "" then return end
+
+    if IsShiftKeyDown() then
+        PawnCommon.Scales[ScaleName] = nil
+        
+        if PawnUICurrentScale == ScaleName then
+            PawnUICurrentScale = nil
+        end
+        
+        PawnRecalculateScaleTotal(ScaleName)
+        PawnResetTooltips()
+
+        -- FULL UI refresh!
+        PawnUIFrame_ScaleSelector_Refresh()
+        PawnUI_ScalesTab_Refresh()
+        PawnUI_SelectScale(nil)
+        print("Pawn: Scale '" .. ScaleName .. "' deleted instantly.")
+    else
+        PawnUIFrame_DeleteScale(ScaleName)
+    end
 end
 
-function PawnUIFrame_DeleteScaleButton_OnOK(ConfirmationText)
-	-- If they didn't type "DELETE" (ignoring case), just exit.
-	if strlower(ConfirmationText) ~= strlower(DELETE_ITEM_CONFIRM_STRING) then return end
-
-	PawnDeleteScale(PawnUICurrentScale)
-	PawnUICurrentScale = nil
-	PawnUIFrame_ScaleSelector_Refresh()
-	PawnUI_ScalesTab_Refresh()
+function PawnUIFrame_DeleteScale(ScaleName)
+    if not ScaleName or ScaleName == "" then return end
+    
+    StaticPopupDialogs["PAWN_DELETE_SCALE"] = {
+        text = format("Type DELETE to confirm deletion of scale '%s':", ScaleName),
+        button1 = "OK",
+        button2 = "Cancel",
+        hasEditBox = true,
+        OnAccept = function(self)
+            local enteredText = self.editBox:GetText()
+            if enteredText == "DELETE" then
+                PawnCommon.Scales[ScaleName] = nil
+                
+                if PawnUICurrentScale == ScaleName then
+                    PawnUICurrentScale = nil
+                end
+                
+                PawnRecalculateScaleTotal(ScaleName)
+                PawnResetTooltips()
+                PawnUIFrame_ScaleSelector_Refresh()
+                PawnUI_ScalesTab_Refresh()
+                PawnUI_SelectScale(nil)
+                print("Pawn: Deleted scale '" .. ScaleName .. "'.")
+            else
+                print("Pawn: Deletion cancelled, incorrect confirmation.")
+            end
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3,
+    }
+    StaticPopup_Show("PAWN_DELETE_SCALE")
 end
+
 
 function PawnUI_ScalesTab_SelectFrame()
-	if not VgerCore.SpecsExist then
-		PawnUIFrame_AutoSelectScalesOnButton:Hide()
-		PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture:Show()
-		PawnUIScalesTab_AutoFrame:Hide()
-		PawnUIScalesTab_ManualFrame:Show()
-	elseif PawnOptions.AutoSelectScales then
-		PawnUIFrame_AutoSelectScalesOnButton.SelectedTexture:Show()
-		PawnUIScalesTab_AutoFrame:Show()
-		PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture:Hide()
-		PawnUIScalesTab_ManualFrame:Hide()
-	else
-		PawnUIFrame_AutoSelectScalesOnButton.SelectedTexture:Hide()
-		PawnUIScalesTab_AutoFrame:Hide()
-		PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture:Show()
-		PawnUIScalesTab_ManualFrame:Show()
-	end
-	PawnUISwitchToTab(PawnUIScalesTabPage)
+    if PawnUIFrame_AutoSelectScalesOnButton and PawnUIFrame_AutoSelectScalesOffButton then
+        if not VgerCore.SpecsExist then
+            PawnUIFrame_AutoSelectScalesOnButton:Hide()
+            if PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture then
+                PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture:Show()
+            end
+            PawnUIScalesTab_AutoFrame:Hide()
+            PawnUIScalesTab_ManualFrame:Show()
+        elseif PawnOptions.AutoSelectScales then
+            if PawnUIFrame_AutoSelectScalesOnButton.SelectedTexture then
+                PawnUIFrame_AutoSelectScalesOnButton.SelectedTexture:Show()
+            end
+            PawnUIScalesTab_AutoFrame:Show()
+            if PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture then
+                PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture:Hide()
+            end
+            PawnUIScalesTab_ManualFrame:Hide()
+        else
+            if PawnUIFrame_AutoSelectScalesOnButton.SelectedTexture then
+                PawnUIFrame_AutoSelectScalesOnButton.SelectedTexture:Hide()
+            end
+            PawnUIScalesTab_AutoFrame:Hide()
+            if PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture then
+                PawnUIFrame_AutoSelectScalesOffButton.SelectedTexture:Show()
+            end
+            PawnUIScalesTab_ManualFrame:Show()
+        end
+    else
+        -- If the buttons are missing, just show the manual frame (classic mode)
+        PawnUIScalesTab_AutoFrame:Hide()
+        PawnUIScalesTab_ManualFrame:Show()
+    end
+    PawnUISwitchToTab(PawnUIScalesTabPage)
 end
+
 
 function PawnUIFrame_AutoSelectScalesOnButton_OnClick()
 	PawnOptions.UpgradeTracking = false
@@ -732,7 +794,7 @@ function PawnUIFrame_StatsList_SelectStat(Index)
 	local Title, ThisStat, ThisDescription, ThisPrompt
 	if Index > 0 then
 		local Title = PawnStats[Index][1] or ThisStat
-	Line:SetText(Title .. " = " .. Value)
+--	Line:SetText(Title .. " = " .. Value)
 		ThisStat = PawnStats[Index][2]
 		if ThisStat then
 			-- This is a stat, not a header row.
@@ -757,10 +819,13 @@ function PawnUIFrame_StatsList_SelectStat(Index)
 		PawnUIFrame_DescriptionLabel:SetText(ThisDescription)
 		ThisPrompt = PawnStats[Index][5]
 		if ThisPrompt then
-			PawnUIFrame_StatNameLabel:SetText(ThisPrompt)
-		else
-			PawnUIFrame_StatNameLabel:SetText(format(PawnLocal.StatNameText, Title))
-		end
+	PawnUIFrame_StatNameLabel:SetText(ThisPrompt)
+elseif Title then
+	PawnUIFrame_StatNameLabel:SetText(format(PawnLocal.StatNameText, Title))
+else
+	PawnUIFrame_StatNameLabel:SetText("")  -- or whatever fallback you want
+end
+
 		PawnUIFrame_StatNameLabel:Show()
 		local ThisScaleValue = ThisScale[ThisStat]
 		local ThisScaleValueUneditable = ThisScaleValue

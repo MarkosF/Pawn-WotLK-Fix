@@ -142,38 +142,27 @@
 	</Button>
 
 	<!-- A big clear button template -->
-	<Button name="PawnUIClearButtonTemplate" virtual="true">
-		<Size x="260" y="60" />
-		<NormalTexture parentKey="NormalTexture" file="Interface\PVPFrame\PvPMegaQueue">
-			<TexCoords left="0.00195313" right="0.58789063" top="0.87304688" bottom="0.92773438" />
-		</NormalTexture>
-		<PushedTexture file="Interface\PVPFrame\PvPMegaQueue">
-			<TexCoords left="0.00195313" right="0.58789063" top="0.92968750" bottom="0.98437500" />
-		</PushedTexture>
-		<Layers>
-			<Layer level="OVERLAY">
-				<Texture parentKey="SelectedTexture" file="Interface\PVPFrame\PvPMegaQueue" alphaMode="ADD" hidden="true">
-					<Size x="260" y="50" />
-					<Anchors>
-						<Anchor point="CENTER" />
-					</Anchors>
-					<TexCoords left="0.00195313" right="0.63867188" top="0.76953125" bottom="0.83007813" />
-				</Texture>
-			</Layer>
-		</Layers>
-		<HighlightTexture parentKey="HighlightTexture" file="Interface\PVPFrame\PvPMegaQueue" alphaMode="ADD">
-			<Size x="260" y="50" />
-			<Anchors>
-				<Anchor point="CENTER" />
-			</Anchors>
-			<TexCoords left="0.00195313" right="0.63867188" top="0.70703125" bottom="0.76757813" />
-		</HighlightTexture>
-		<Scripts>
-			<OnEnter function="PawnUIFrame_TooltipOn" />
-			<OnLeave function="PawnUIFrame_TooltipOff" />
-		</Scripts>
-	</Button>
-	
+<Button name="PawnUIClearButtonTemplate" virtual="true">
+    <Size x="220" y="48"/>
+    <NormalTexture file="Interface\GLUES\COMMON\Glue-Panel-Button-Up" />
+    <PushedTexture file="Interface\GLUES\COMMON\Glue-Panel-Button-Down" />
+    <HighlightTexture file="Interface\GLUES\COMMON\Glue-Panel-Button-Highlight" alphaMode="ADD" />
+    <Layers>
+        <Layer level="OVERLAY">
+            <FontString name="$parentText" inherits="GameFontNormal" parentKey="Text">
+                <Anchors>
+                    <Anchor point="CENTER"/>
+                </Anchors>
+            </FontString>
+        </Layer>
+    </Layers>
+    <Scripts>
+        <OnEnter function="PawnUIFrame_TooltipOn" />
+        <OnLeave function="PawnUIFrame_TooltipOff" />
+    </Scripts>
+</Button>
+
+
 	<!-- A stat line on the Compare tab -->
 	<Frame name="PawnUICompareStatLineTemplate" virtual="true">
 		<Size><AbsDimension x="460" y="20" /></Size>
@@ -592,14 +581,14 @@
 									<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="160" y="-285"/></Offset></Anchor></Anchors>
 									<Size><AbsDimension x="400" y="25" /></Size>
 								</FontString>
-
+								<!--
 								<FontString name="PawnUIFrame_NewScaleFromDefaultsButton_Label" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE" text="PawnUIFrame_NewScaleFromDefaultsButton_Label_Text">
-									<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="160" y="-315"/></Offset></Anchor></Anchors>
+									<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="160" y="-345"/></Offset></Anchor></Anchors>
 									<Size><AbsDimension x="400" y="25" /></Size>
 								</FontString>
-
+								-->
 								<FontString inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE" text="PawnUIFrame_NewScaleButton_Label_Text">
-									<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="160" y="-345"/></Offset></Anchor></Anchors>
+									<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="160" y="-315"/></Offset></Anchor></Anchors>
 									<Size><AbsDimension x="400" y="25" /></Size>
 								</FontString>
 
@@ -681,17 +670,17 @@
 									<OnClick function="PawnUIFrame_CopyScaleButton_OnClick" />
 								</Scripts>
 							</Button>
-
+							<!--
 							<Button name="PawnUIFrame_NewScaleFromDefaultsButton" inherits="PawnUIButtonTemplate" text="PawnUIFrame_NewScaleFromDefaultsButton_Text">
-								<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="60" y="-315" /></Offset></Anchor></Anchors>
+								<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="60" y="-345" /></Offset></Anchor></Anchors>
 								<Size><AbsDimension x="90" y="25" /></Size>
 								<Scripts>
 									<OnClick function="PawnUIFrame_NewScaleFromDefaultsButton_OnClick" />
 								</Scripts>
 							</Button>
-
+							-->
 							<Button name="PawnUIFrame_NewScaleButton" inherits="PawnUIButtonTemplate" text="PawnUIFrame_NewScaleButton_Text">
-								<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="60" y="-345" /></Offset></Anchor></Anchors>
+								<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="60" y="-315" /></Offset></Anchor></Anchors>
 								<Size><AbsDimension x="90" y="25" /></Size>
 								<Scripts>
 									<OnClick function="PawnUIFrame_NewScaleButton_OnClick" />
@@ -737,6 +726,7 @@
 							</Layer>
 						</Layers>
 						<Frames>
+							<!--
 							<Button name="PawnUIFrame_AutoSelectScalesOnButton" inherits="PawnUIClearButtonTemplate">
 								<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="30" y="-400" /></Offset></Anchor></Anchors>
 								<Layers>
@@ -755,7 +745,7 @@
 									<OnClick function="PawnUIFrame_AutoSelectScalesOnButton_OnClick" />
 								</Scripts>
 							</Button>
-
+							
 							<Button name="PawnUIFrame_AutoSelectScalesOffButton" inherits="PawnUIClearButtonTemplate">
 								<Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="320" y="-400" /></Offset></Anchor></Anchors>
 								<Layers>
@@ -774,6 +764,7 @@
 									<OnClick function="PawnUIFrame_AutoSelectScalesOffButton_OnClick" />
 								</Scripts>
 							</Button>
+							-->
 						</Frames>
 
 					</Frame>
