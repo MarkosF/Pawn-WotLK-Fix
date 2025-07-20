@@ -20,7 +20,7 @@ This repo includes all necessary code tweaks and polyfills to ensure Pawn runs w
 - **Item comparison and upgrade arrows** in tooltips.
 - **Customizable stat weights** ("scales").
 - **Works on Wrath Classic 3.3.5a.**
-- **Percentages work now!** Item tooltips show upgrade/downgrade percentages just like retail.
+- **Percentages work now!** Item tooltips show upgrade percentages just like retail.
 - No more retail-only errors or missing functions.
 
 ---
@@ -38,7 +38,6 @@ This repo includes all necessary code tweaks and polyfills to ensure Pawn runs w
 ## Credits
 
 - **Original author:** [Travis Spomer](https://www.curseforge.com/members/travisspomer/projects)
-- **Backport and WotLK fixes:** [Your Name Here]
 - **Special thanks** to the WoW Classic community for testing and feedback.
 
 ---
