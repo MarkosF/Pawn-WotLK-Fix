@@ -114,6 +114,7 @@ local PawnItemEquipLocToSlot2 =
 	INVTYPE_WEAPON = 17,
 }
 
+
 -- Don't taint the global variable "_".
 local _
 

@@ -34,6 +34,8 @@ else
 	PawnArmorSpecializationLevel = nil
 end
 
+if not VgerCore then VgerCore = {} end
+VgerCore.IsWrath = true
 ------------------------------------------------------------
 -- Localization
 ------------------------------------------------------------
